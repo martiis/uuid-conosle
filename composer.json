@@ -7,6 +7,9 @@
         "ramsey/uuid": "^4",
         "symfony/console": "5.4.*"
     },
+    "require-dev": {
+        "symfony/var-dumper": "5.4.*"
+    },
     "license": "GNU",
     "autoload": {
         "psr-4": {
