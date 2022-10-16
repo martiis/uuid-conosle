@@ -1,0 +1,32 @@
+{
+    "name": "martiis/uuid-console",
+    "description": "A console application for generating and decoding UUIDs.",
+    "type": "project",
+    "require": {
+        "php": "^8",
+        "ramsey/uuid": "^4",
+        "symfony/console": "5.4.*"
+    },
+    "license": "GNU",
+    "autoload": {
+        "psr-4": {
+            "Martiis\\UuidConsole\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Martynas",
+            "email": "martynas12@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "bin": ["bin/uuid"],
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "phpcs-install": "wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v3.12.0/php-cs-fixer.phar -O php-cs-fixer",
+        "phpcs": "./php-cs-fixer fix --dry-run --allow-risky=yes --show-progress=dots --verbose --diff",
+        "phpcs-fix": "./php-cs-fixer fix --allow-risky=yes --show-progress=dots"
+    }
+}
