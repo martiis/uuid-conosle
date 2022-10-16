@@ -10,7 +10,7 @@
     "require-dev": {
         "symfony/var-dumper": "5.4.*"
     },
-    "license": "GNU",
+    "license": "GPL-3.0-only",
     "autoload": {
         "psr-4": {
             "Martiis\\UuidConsole\\": "src/"
