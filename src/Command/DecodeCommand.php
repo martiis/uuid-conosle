@@ -9,6 +9,7 @@ use Ramsey\Uuid\Exception\UnsupportedOperationException;
 use Ramsey\Uuid\Rfc4122\Fields;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidFactoryInterface;
+use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +31,6 @@ class DecodeCommand extends Command
         $this->uuidFactory = clone Uuid::getFactory();
         $this->orderedTimeCodec = new OrderedTimeCodec($this->uuidFactory->getUuidBuilder());
     }
-
 
     protected function configure(): void
     {
@@ -56,7 +56,7 @@ class DecodeCommand extends Command
 
         $uuid = Uuid::fromString($uuidScalar);
 
-        if ($ordered === true) {
+        if (true === $ordered) {
             try {
                 $uuid = $this->orderedTimeCodec->decodeBytes($uuid->getBytes());
             } catch (UnsupportedOperationException) {
@@ -64,28 +64,33 @@ class DecodeCommand extends Command
             }
         }
 
-        $uuidFields = $uuid->getFields();
         $table = new Table($output);
         $table->setStyle('symfony-style-guide');
+        $table->addRow(['str', $uuid->toString()]);
+        $table->addRow(['str-hex', $uuid->getHex()->toString()]);
+        $table->addRow(['version', $uuid->getVersion()]);
 
-        if ($uuidFields instanceof Fields) {
-            $table->addRow(['Version', $uuid->getVersion()]);
-            $table->addRow(['Str', $uuid->toString()]);
-            $table->addRow(['Str-Hex', $uuid->getHex()->toString()]);
-            $table->addRow(['Int', $uuid->getInteger()->toString()]);
+        if ($this->isUuidVersion($uuid, 1)) {
+            $table->addRow([
+                'ord-time',
+                '0x'.Uuid::fromBytes($this->orderedTimeCodec->encodeBinary($uuid))->getHex()->toString(),
+            ]);
 
-            if ($uuidFields->getVersion() === 1) {
-                $table->addRow([
-                    'Ord-Time',
-                    '0x'.Uuid::fromBytes($this->orderedTimeCodec->encodeBinary($uuid))->getHex()->toString()
-                ]);
-            }
-        } else {
-            $table->addRow(['', 'Not an RFC 4122 UUID',]);
+            $table->addRow([
+                'encoded time',
+                $uuid->getDateTime()->format(\DateTimeInterface::ATOM),
+            ]);
         }
 
         $table->render();
 
         return 0;
+    }
+
+    private function isUuidVersion(UuidInterface $uuid, int $version): bool
+    {
+        $fields = $uuid->getFields();
+
+        return $fields instanceof Fields && $fields->getVersion() === $version;
     }
 }

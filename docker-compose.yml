@@ -1,11 +1,13 @@
 version: '3'
 
 services:
-    dev:
+    composer:
         image: composer:2.4.2
         volumes:
             - composer-cache:/tmp
             - ./:/app
+        working_dir: /app
+        command: composer install
 
 volumes:
     composer-cache:
