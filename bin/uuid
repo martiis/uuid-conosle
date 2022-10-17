@@ -7,7 +7,17 @@ if (PHP_SAPI !== 'cli') {
     die('uuid should be invoked via the CLI version of PHP, not the ' . PHP_SAPI . ' SAPI' . PHP_EOL);
 }
 
-require __DIR__.'/../vendor/autoload.php';
+$files = array(
+    __DIR__ . '/../vendor/autoload.php',
+    __DIR__ . '/../../../autoload.php',
+);
+
+foreach ($files as $file) {
+    if (file_exists($file)) {
+        require $file;
+        break;
+    }
+}
 
 use Symfony\Component\Console\Application;
 use Martiis\UuidConsole\Command;
