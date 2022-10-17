@@ -22,7 +22,7 @@ foreach ($files as $file) {
 use Symfony\Component\Console\Application;
 use Martiis\UuidConsole\Command;
 
-$application = new Application('martiis/uuid-console', '0.0.1');
+$application = new Application('martiis/uuid-console', '0.0.2');
 $application->add(new Command\GenerateCommand());
 $application->add(new Command\DecodeCommand());
 $application->run();
